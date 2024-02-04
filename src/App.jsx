@@ -1,5 +1,3 @@
-import { Button } from '@mui/material'
-
 import { useColorScheme } from '@mui/material/styles'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -10,6 +8,8 @@ import Box from '@mui/material/Box'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
+import Container from '@mui/material/Container'
+import theme from './theme'
 
 function SelectToggle() {
   const { mode, setMode } = useColorScheme()
@@ -50,28 +50,35 @@ function SelectToggle() {
   )
 }
 
-function ModeToggle() {
-  const { mode, setMode } = useColorScheme()
-  return (
-    <Button
-      onClick={() => {
-        setMode(mode === 'light' ? 'dark' : 'light')
-      }}
-    >
-      {mode === 'light' ? 'Turn dark' : 'Turn light'}
-    </Button>
-  )
-}
 
 function App() {
   return (
-    <>
-      <SelectToggle />
-      <hr/>
-      <ModeToggle />
-      <div>ahihai</div>
-      <Button variant='contained'>Hello world</Button>
-    </>
+    <Container disableGutters maxWidth= { false } sx={{ height: '100vh' }} >
+      <Box sx={{
+        display : 'flex',
+        alignItems : 'center',
+        backgroundColor: 'primary.light',
+        height : (theme) => theme.trello.appBarHeight
+      }} >
+        <SelectToggle />
+      </Box>
+      <Box sx={{
+        display : 'flex',
+        alignItems : 'center',
+        backgroundColor: 'primary.dark',
+        height : (theme) => theme.trello.boardBarHeight
+      }} >
+        Board bar
+      </Box>
+      <Box sx={{
+        display : 'flex',
+        alignItems : 'center',
+        // backgroundColor: 'primary.light',
+        height : (theme) => `calc(100vh - ${theme.trello.appBarHeight} - ${theme.trello.boardBarHeight})`
+      }} >
+        Content
+      </Box>
+    </Container>
   )
 }
 
