@@ -16,12 +16,22 @@ module.exports = {
     'react-refresh'
   ],
   rules: {
+    //react rules
     'react-refresh/only-export-components': 'warn',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     'react/prop-types': 0,
     'react/display-name': 0,
 
+    // MUI rules
+    'no-restricted-imports': [
+      'error',
+      {
+        'patterns': ['@mui/*/*/*']
+      }
+    ],
+
+    //Common rules
     'no-console': 1,
     'no-lonely-if': 1,
     'no-unused-vars': 1,
@@ -39,6 +49,7 @@ module.exports = {
     'keyword-spacing': 1,
     'comma-dangle': 1,
     'comma-spacing': 1,
-    'arrow-spacing': 1
+    'arrow-spacing': 1,
+    'editor.formatOnSave': false,
   }
 }
