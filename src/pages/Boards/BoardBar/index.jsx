@@ -19,12 +19,12 @@ import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 export default function BoardBar() {
   // MEnu styles
   const Menu_styles ={
-    color: 'primary.main',
-    bgcolor: 'white',
+    color: 'white',
+    bgcolor: 'transparent',
     paddingX: 1,
     borderRadius: '6px',
     '& .MuiSvgIcon-root': {
-      color : 'primary.main'
+      color : 'white'
     },
     '&:hover': {
       bgcolor : 'primary.50'
@@ -39,10 +39,11 @@ export default function BoardBar() {
       width : '100%',
       height : (theme) => theme.trello.boardBarHeight,
       justifyContent : 'space-between',
-      borderTop: '1px solid #00bfa5',
+      borderBottom: '1px solid #00bfa5',
       gap: 3,
       px: 2,
-      overflow: 'auto'
+      overflow: 'auto',
+      bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1976d2' )
     }} >
       <Box sx={{ display: 'flex', alignItems : 'center', gap: 2 }} >
         <Stack direction="row" spacing={1}>
@@ -81,7 +82,15 @@ export default function BoardBar() {
       </Box>
 
       <Box sx={{ display: 'flex', alignItems : 'center', gap: 2 }} >
-        <Button startIcon={ <PersonAddAltIcon /> } variant='outlined' >Invite</Button>
+        <Button
+          startIcon={ <PersonAddAltIcon /> }
+          variant='outlined'
+          sx={{
+            color: 'white',
+            borderColor: 'white',
+            '&:hover' : { borderColor: 'white' }
+          }}
+        >Invite</Button>
 
         <AvatarGroup
           sx={{

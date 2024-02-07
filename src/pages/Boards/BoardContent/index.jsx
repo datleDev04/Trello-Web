@@ -7,7 +7,7 @@ export default function BoardContent() {
       width : '100%',
       alignItems : 'center',
       height : (theme) => `calc(100vh - ${theme.trello.appBarHeight} - ${theme.trello.boardBarHeight})`,
-      bgcolor: 'primary.main'
+      bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1976d2' )
     }} >
         Content
     </Box>

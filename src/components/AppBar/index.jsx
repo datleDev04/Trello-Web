@@ -4,9 +4,7 @@ import * as React from 'react'
 // MUI import
 import ModeSelect from '~/components/ModeSelect'
 import Box from '@mui/material/Box'
-import AppsIcon from '@mui/icons-material/Apps'
-import SvgIcon from '@mui/material/SvgIcon'
-import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
+
 import Typography from '@mui/material/Typography'
 import WorkSpaces from './Menus/WorkSpaces'
 import Recent from './Menus/Recent'
@@ -17,12 +15,20 @@ import TextField from '@mui/material/TextField'
 import Badge from '@mui/material/Badge'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import Tooltip from '@mui/material/Tooltip'
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Profile from './Menus/Profiles'
+import InputAdornment from '@mui/material/InputAdornment'
+
+// mui icons import
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
+import AppsIcon from '@mui/icons-material/Apps'
+import SvgIcon from '@mui/material/SvgIcon'
+import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import SearchIcon from '@mui/icons-material/Search'
+import ClearIcon from '@mui/icons-material/Clear'
 
 export default function AppBar() {
-  const [invisible, setInvisible] = React.useState(false)
+  const [searchValue, setSearchValue] = React.useState('')
   return (
     <Box px={2} sx={{
       display : 'flex',
@@ -31,15 +37,16 @@ export default function AppBar() {
       width : '100%',
       justifyContent : 'space-between',
       gap: 3,
-      overflow: 'auto'
+      overflow: 'auto',
+      bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#34495e' : '#1565c0' )
     }} >
 
       <Box sx={{ display: 'flex', alignItems : 'center', gap: 2 }} >
-        <AppsIcon sx={{ color : 'primary.main' }} />
+        <AppsIcon sx={{ color : 'white' }} />
 
         <Box sx={{ display: 'flex', alignItems : 'center', gap: 0.5 }} >
-          <SvgIcon sx={{ color : 'primary.main' }} fontSize="small" component={TrelloIcon} inheritViewBox />
-          <Typography variant='span' sx={{ fontSize: '1.2rem', fontWeight: 'bold', color : 'primary.main' }} >Trello</Typography>
+          <SvgIcon sx={{ color : 'white' }} fontSize="small" component={TrelloIcon} inheritViewBox />
+          <Typography variant='span' sx={{ fontSize: '1.2rem', fontWeight: 'bold', color : 'white' }} >Trello</Typography>
         </Box>
 
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap:1 }} >
@@ -47,25 +54,70 @@ export default function AppBar() {
           <Recent />
           <Starred />
           <Templates />
-          <Button startIcon={<LibraryAddIcon/>} variant='outlined' >Create</Button>
+          <Button
+            sx={{ color: 'white' }}
+            startIcon={<LibraryAddIcon/> }
+            variant='outlined'
+          >Create</Button>
         </Box>
 
       </Box>
 
       <Box sx={{ display: 'flex', alignItems : 'center', gap: 2 }} >
-        <TextField sx={{ minWidth: 120 }} id="outlined-search" label="Search..." type="search" size='small' />
+        <TextField
+          sx={{
+            minWidth: 120,
+            color: 'white',
+            maxWidth: 170,
+            '& label' : { color: 'white' },
+            '& input' : { color: 'white' },
+            '& label.Mui-focused' : { color: 'white' },
+            '& .MuiOutlinedInput-root' : {
+              '& fieldset': {
+                borderColor : 'white'
+              },
+              '&:hover fieldset': {
+                borderColor : 'white'
+              },
+              '&.Mui-focused fieldset': {
+                borderColor : 'white'
+              }
+            }
+          }}
+          id="outlined-search"
+          label="Search..."
+          type="text"
+          size='small'
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: 'white' }} />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              searchValue &&
+              <ClearIcon
+                fontSize ='small'
+                sx={{ color: 'white', cursor: 'pointer' }}
+                onClick = {() => setSearchValue('')}
+              />
+            )
+          }}
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
 
         <ModeSelect />
 
         <Tooltip title="Notification">
-          <Badge color="secondary" variant="dot" invisible={invisible} sx={{ cursor : 'pointer' }}>
-            <NotificationsNoneIcon sx={{ color : 'primary.main' }} />
+          <Badge color="warning" variant="dot" sx={{ cursor : 'pointer' }}>
+            <NotificationsNoneIcon sx={{ color : 'white' }} />
           </Badge>
         </Tooltip>
 
 
         <Tooltip title="Help">
-          <HelpOutlineIcon sx={{ color : 'primary.main' }} />
+          <HelpOutlineIcon sx={{ color : 'white' }} />
         </Tooltip>
 
         <Profile />

@@ -1,5 +1,5 @@
 
-import { cyan, deepOrange, orange, teal } from '@mui/material/colors'
+// import { cyan, deepOrange, orange, teal } from '@mui/material/colors'
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
 // Create a theme instance.
@@ -9,18 +9,18 @@ const theme = extendTheme({
     boardBarHeight: '62px'
   },
   colorSchemes: {
-    light: {
-      palette: {
-        primary : teal,
-        secondary : deepOrange
-      }
-    },
-    dark: {
-      palette: {
-        primary : cyan,
-        secondary : orange
-      }
-    }
+    // light: {
+    //   palette: {
+    //     primary : teal,
+    //     secondary : deepOrange
+    //   }
+    // },
+    // dark: {
+    //   palette: {
+    //     primary : cyan,
+    //     secondary : orange
+    //   }
+    // }
   },
   components: {
     // Name of the component
@@ -29,7 +29,8 @@ const theme = extendTheme({
         // Name of the slot
         root: {
           // Some CSS
-          textTransform : 'none'
+          textTransform : 'none',
+          borderWidth : '0.5px !important'
         }
       }
     },
@@ -48,22 +49,11 @@ const theme = extendTheme({
 
     MuiOutlinedInput: {
       styleOverrides: {
-        root: ({ theme }) => {
-          return {
-            colors : theme.palette.primary.main,
-            fontSize : '0.875rem',
-            '.MuiOutlinedInput-notchedOutline' : {
-              borderColor : theme.palette.primary.main
-            },
-            '&:hover': {
-              '.MuiOutlinedInput-notchedOutline' : {
-                borderColor : theme.palette.primary.main
-              }
-            },
-            '& fieldset': {
-              borderWidth : '1px !important'
-            }
-          }
+        root: {
+          fontSize : '0.875rem',
+          '& fieldset': { borderWidth : '0.5px !important' },
+          '&:hover fieldset': { borderWidth : '1px !important' },
+          '&.Mui-focused fieldset': { borderWidth : '1px !important' }
         }
       }
     },
@@ -76,7 +66,7 @@ const theme = extendTheme({
             height: '5px'
           },
           '*::-webkit-scrollbar-thumb ': {
-            backgroundColor: '#bdc3c7',
+            backgroundColor: '#dcdde1',
             borderRadius : '8px'
           },
           '*::-webkit-scrollbar-thumb:hover ': {

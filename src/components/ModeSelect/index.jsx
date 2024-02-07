@@ -18,29 +18,36 @@ function ModeSelect() {
 
   return (
     <FormControl size="small" sx={{ minWidth: 120 }} >
-      <InputLabel id="demo-select-small-label">Mode</InputLabel>
+      <InputLabel sx ={{ color: 'white' }} id="demo-select-small-label">Mode</InputLabel>
       <Select
         labelId="demo-select-small-label"
         id="demo-select-small"
         value={mode}
         label="mode"
         onChange={handleChange}
-        sx ={{ cursor : 'poieter' }}
+        sx ={{
+          cursor : 'pointer',
+          color : 'white',
+          '.MuiOutlinedInput-notchedOutline' : { borderColor : 'white' },
+          '&:hover .MuiOutlinedInput-notchedOutline' : { borderColor : 'white' },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline' : { borderColor : 'white' },
+          '.MuiSvgIcon-root' : { color : 'white' }
+        }}
       >
         <MenuItem value="light">
-          <Box sx={{ display : 'flex', alignItems : 'center', gap : '8px', color : 'primary.main' }} >
+          <Box sx={{ display : 'flex', alignItems : 'center', gap : 1 }} >
             <LightModeIcon />
             light
           </Box>
         </MenuItem>
         <MenuItem value="dark">
-          <Box sx={{ display : 'flex', alignItems : 'center', gap: 1, color : 'primary.main' }} >
+          <Box sx={{ display : 'flex', alignItems : 'center', gap: 1 }} >
             <DarkModeOutlinedIcon />
             dark
           </Box>
         </MenuItem>
         <MenuItem value="system">
-          <Box sx={{ display : 'flex', alignItems : 'center', gap : 1, color : 'primary.main' }} >
+          <Box sx={{ display : 'flex', alignItems : 'center', gap : 1 }} >
             <SettingsBrightnessIcon />
             system
           </Box>

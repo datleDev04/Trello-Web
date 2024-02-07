@@ -1,3 +1,7 @@
+// react import
+import * as React from 'react'
+
+// MUI import
 import Cloud from '@mui/icons-material/Cloud'
 import ContentCopy from '@mui/icons-material/ContentCopy'
 import ContentCut from '@mui/icons-material/ContentCut'
@@ -10,7 +14,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import * as React from 'react'
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 export default function Starred() {
@@ -31,6 +35,7 @@ export default function Starred() {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         endIcon ={ <ExpandMoreIcon /> }
+        sx={{ color: 'white' }}
       >
         starred
       </Button>
