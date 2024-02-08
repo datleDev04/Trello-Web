@@ -97,7 +97,8 @@ export default function BoardBar() {
             '& .MuiAvatar-root': {
               height: 34,
               width: 34,
-              fontSize: 16
+              fontSize: 16,
+              '&:first-of-type' : { borderColor : '#a4b0be' }
             },
             cursor:'pointer'
           }}
