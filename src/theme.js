@@ -45,12 +45,14 @@ const theme = extendTheme({
     MuiInputLabel: {
       styleOverrides: {
         // Name of the slot
-        root: ({ theme }) => {
-          return {
-            colors : theme.palette.primary.main,
-            fontSize : '0.875rem'
-          }
-        }
+        root: { fontSize : '0.875rem' }
+      }
+    },
+
+    MuiTypography: {
+      styleOverrides: {
+        // Name of the slot
+        root: { '&.MuiTypography-body1': { fontSize : '0.875rem' } }
       }
     },
 
@@ -74,11 +76,11 @@ const theme = extendTheme({
           },
           '*::-webkit-scrollbar-thumb ': {
             backgroundColor: '#dcdde1',
-            borderRadius : '8px'
+            borderRadius : '10px'
           },
           '*::-webkit-scrollbar-thumb:hover ': {
             backgroundColor: '#00b894',
-            borderRadius : '8px'
+            borderRadius : '10px'
           }
         }
       }
