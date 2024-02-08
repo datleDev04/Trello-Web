@@ -2,11 +2,18 @@
 // import { cyan, deepOrange, orange, teal } from '@mui/material/colors'
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
+// decalare variable
+const APP_BAR_HEIGHT = '52px'
+const BOARD_BAR_HEIGHT = '56px'
+const BOARD_CONTENT_HEIGHT = `calc(100vh - ${APP_BAR_HEIGHT} - ${BOARD_BAR_HEIGHT})`
+
+
 // Create a theme instance.
 const theme = extendTheme({
   trello: {
-    appBarHeight: '52px',
-    boardBarHeight: '62px'
+    appBarHeight: APP_BAR_HEIGHT,
+    boardBarHeight: BOARD_BAR_HEIGHT,
+    boardContentHeight: BOARD_CONTENT_HEIGHT
   },
   colorSchemes: {
     // light: {
@@ -38,12 +45,14 @@ const theme = extendTheme({
     MuiInputLabel: {
       styleOverrides: {
         // Name of the slot
-        root: ({ theme }) => {
-          return {
-            colors : theme.palette.primary.main,
-            fontSize : '0.875rem'
-          }
-        }
+        root: { fontSize : '0.875rem' }
+      }
+    },
+
+    MuiTypography: {
+      styleOverrides: {
+        // Name of the slot
+        root: { '&.MuiTypography-body1': { fontSize : '0.875rem' } }
       }
     },
 
@@ -67,11 +76,11 @@ const theme = extendTheme({
           },
           '*::-webkit-scrollbar-thumb ': {
             backgroundColor: '#dcdde1',
-            borderRadius : '8px'
+            borderRadius : '10px'
           },
           '*::-webkit-scrollbar-thumb:hover ': {
             backgroundColor: '#00b894',
-            borderRadius : '8px'
+            borderRadius : '10px'
           }
         }
       }

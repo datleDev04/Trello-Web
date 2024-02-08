@@ -43,7 +43,8 @@ export default function BoardBar() {
       gap: 3,
       px: 2,
       overflow: 'auto',
-      bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1976d2' )
+      bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1976d2' ),
+      '&::-webkit-scrollbar-track': { m: 2 }
     }} >
       <Box sx={{ display: 'flex', alignItems : 'center', gap: 2 }} >
         <Stack direction="row" spacing={1}>
@@ -97,7 +98,8 @@ export default function BoardBar() {
             '& .MuiAvatar-root': {
               height: 34,
               width: 34,
-              fontSize: 16
+              fontSize: 16,
+              '&:first-of-type' : { borderColor : '#a4b0be' }
             },
             cursor:'pointer'
           }}

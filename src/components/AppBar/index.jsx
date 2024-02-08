@@ -38,7 +38,8 @@ export default function AppBar() {
       justifyContent : 'space-between',
       gap: 3,
       overflow: 'auto',
-      bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#34495e' : '#1565c0' )
+      bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#34495e' : '#1565c0' ),
+      '&::-webkit-scrollbar-track': { m: 2 }
     }} >
 
       <Box sx={{ display: 'flex', alignItems : 'center', gap: 2 }} >
