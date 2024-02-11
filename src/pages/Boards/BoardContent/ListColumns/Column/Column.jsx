@@ -27,7 +27,30 @@ import ListCard from './ListCards/ListCard'
 const COLLUM_HEADER_HEIGHT = '52px'
 const COLLUM_FOOTER_HEIGHT = '56px'
 
+// import sort funtion
+import { mapOrder } from '~/utils/sorts'
+
+//dnd-kit
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+
 const Column = ({ column }) => {
+  // dnd-kit drag drop
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: column._id,
+    data: { ...column }
+  })
+
+  const dndKitColumnStyle = {
+    // Sử dụng transform thì bị lỗi stretch
+    // transform: CSS.Transform.toString(transform),
+    // tac giả khuyên nên sd translate
+    // https://github.com/clauderic/dnd-kit/issues/117
+    transform: CSS.Translate.toString(transform),
+    transition
+  }
+
+  // menu dropdown
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
@@ -36,19 +59,28 @@ const Column = ({ column }) => {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  // handle sort card
+  const orderredCards = mapOrder(column.cards, column.cardOrderIds, '_id')
   return (
     <>
       {/* Box collumn */}
-      <Box sx={{
-        maxWidth: '270px',
-        minWidth: '270px',
-        border : '1px solid white',
-        m : '0 8px',
-        borderRadius: '6px',
-        height : 'fit-content',
-        bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#333643' : '#ebecf0' ),
-        maxHeight : (theme) => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5) } )`
-      }}>
+      <Box
+        ref={setNodeRef}
+        style={dndKitColumnStyle}
+        {...attributes}
+        {...listeners}
+        sx={{
+          maxWidth: '270px',
+          minWidth: '270px',
+          border : '1px solid white',
+          m : '0 8px',
+          borderRadius: '6px',
+          height : 'fit-content',
+          bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#333643' : '#ebecf0' ),
+          maxHeight : (theme) => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5) } )`
+        }}
+      >
         {/* Box collum header */}
         <Box sx={{
           height: COLLUM_HEADER_HEIGHT,
@@ -130,7 +162,7 @@ const Column = ({ column }) => {
         </Box>
 
         {/* Listcard */}
-        <ListCard listcard ={ column.cards } />
+        <ListCard listcard ={ orderredCards } />
 
         {/* Box collums footer */}
         <Box sx={{
