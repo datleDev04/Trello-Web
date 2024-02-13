@@ -42,6 +42,8 @@ const Column = ({ column }) => {
   })
 
   const dndKitColumnStyle = {
+    // fix lỗi lag trên mobile
+    touchAction : 'none',
     // Sử dụng transform thì bị lỗi stretch
     // transform: CSS.Transform.toString(transform),
     // tac giả khuyên nên sd translate
