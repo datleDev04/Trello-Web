@@ -9,10 +9,10 @@ import AddIcon from '@mui/icons-material/Add'
 import Column from './Column/Column'
 
 // dnd-kit
-import { SortableContext } from '@dnd-kit/sortable'
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 const ListColumns = ({ columns }) => {
   return (
-    <SortableContext items={columns.map(c => c._id)}>
+    <SortableContext items={columns.map(c => c._id)} strategy={horizontalListSortingStrategy}>
       <Box sx={{
         overflowY: 'hidden',
         overflowX: 'auto',

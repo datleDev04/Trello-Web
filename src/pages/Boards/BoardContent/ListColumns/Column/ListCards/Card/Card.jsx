@@ -11,18 +11,47 @@ import AttachmentIcon from '@mui/icons-material/Attachment'
 import CommentIcon from '@mui/icons-material/Comment'
 import GroupIcon from '@mui/icons-material/Group'
 
+//dnd-kit
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+
 export default function Card({ card }) {
   // hàm trả về điều kiện in cardAction khi tồn tại 1 trong 3 trường
   const shouldShowCardAction = () => {
     return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
   }
+
+  // dnd-kit drag drop
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: card._id,
+    data: { ...card }
+  })
+
+  const dndKitCardStyle = {
+    // fix lỗi lag trên mobile
+    touchAction : 'none',
+    // Sử dụng transform thì bị lỗi stretch
+    // transform: CSS.Transform.toString(transform),
+    // tac giả khuyên nên sd translate
+    // https://github.com/clauderic/dnd-kit/issues/117
+    transform: CSS.Translate.toString(transform),
+    transition,
+    opacity: isDragging ? 0.7 : undefined
+  }
+
   return (
     <>
-      <MuiCard sx={{
-        cursor:'pointer',
-        boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
-        overflow: 'unset'
-      }}>
+      <MuiCard
+        sx={{
+          cursor:'pointer',
+          boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
+          overflow: 'unset'
+        }}
+        ref={setNodeRef}
+        style={dndKitCardStyle}
+        {...attributes}
+        {...listeners}
+      >
         {/* Ảnh bìa của card */}
         {card?.cover && <CardMedia sx={{ height: 140 }} image={ card.cover } /> }
 
