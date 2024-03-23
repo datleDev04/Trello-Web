@@ -36,7 +36,8 @@ export default function Card({ card }) {
     // https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
     transition,
-    opacity: isDragging ? 0.7 : undefined
+    opacity: isDragging ? 0.7 : undefined,
+    border: isDragging ? '.5px solid #bdc3c7' : undefined
   }
 
   return (
@@ -45,7 +46,13 @@ export default function Card({ card }) {
         sx={{
           cursor:'pointer',
           boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
-          overflow: 'unset'
+          overflow: 'unset',
+          opacity: card.FE_placholder_card ? '0' : '1',
+          minWidth: card.FE_placholder_card ? '280px' : 'unset',
+          pointerEvents: card.FE_placholder_card ? 'none' : 'unset',
+          position: card.FE_placholder_card ? 'fixed' : 'unset'
+
+
         }}
         ref={setNodeRef}
         style={dndKitCardStyle}
