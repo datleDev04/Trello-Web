@@ -14,6 +14,7 @@ import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortabl
 
 import { useState } from 'react'
 import { TextField } from '@mui/material'
+import { toast } from 'react-toastify'
 
 const ListColumns = ({ columns }) => {
 
@@ -25,17 +26,17 @@ const ListColumns = ({ columns }) => {
     setOpenNewColumnForm(!openNewColumnForm)
   }
 
-  // const addNewColumn = () => {
-  //   if (!newColTitle ) {
+  const addNewColumn = () => {
+    if (!newColTitle ) {
+      toast.error('Please enter the column title')
+      return
+    }
 
-  //     return
-  //   }
-
-  //   // thêm xong thì đóng form thêm
-  //   toggleOpenNewColumnForm()
-  //   // set lại giá trị newCOLTITLE
-  //   setNewColTitle('')
-  // }
+    // thêm xong thì đóng form thêm
+    toggleOpenNewColumnForm()
+    // set lại giá trị newCOLTITLE
+    setNewColTitle('')
+  }
 
   return (
     <SortableContext items={columns.map(c => c._id)} strategy={horizontalListSortingStrategy}>
@@ -138,6 +139,7 @@ const ListColumns = ({ columns }) => {
                   variant='contained'
                   color='success'
                   size='small'
+                  onClick = {addNewColumn}
                 >
                   Add Column
                 </Button>
