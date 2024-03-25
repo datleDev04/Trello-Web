@@ -39,6 +39,8 @@ import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
+import { toast } from 'react-toastify'
+
 const Column = ({ column }) => {
   // dnd-kit drag drop
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -79,17 +81,19 @@ const Column = ({ column }) => {
     setOpenNewCardForm(!openNewCardForm)
   }
 
-  // const addNewColumn = () => {
-  //   if (!newColTitle ) {
+  const addNewCard = () => {
+    if (!newCardTitle ) {
+      toast.error('Please enter the card title', {
+        position: 'bottom-right'
+      })
+      return
+    }
 
-  //     return
-  //   }
-
-  //   // thêm xong thì đóng form thêm
-  // toggleOpenNewCardForm()
-  //   // set lại giá trị newCOLTITLE
-  // setNewCardTitle('')
-  // }
+    // thêm xong thì đóng form thêm
+    toggleOpenNewCardForm()
+    // set lại giá trị newCOLTITLE
+    setNewCardTitle('')
+  }
 
   return (
     <>
@@ -272,12 +276,13 @@ const Column = ({ column }) => {
                       variant='contained'
                       color='success'
                       size='small'
+                      onClick = {addNewCard}
                     >
                       Add
                     </Button>
                     <ClearIcon
                       fontSize ='small'
-                      sx={{ color: 'white', cursor: 'pointer' }}
+                      sx={{ color: 'blue', cursor: 'pointer' }}
                       onClick = {toggleOpenNewCardForm}
                     />
                   </Box>
