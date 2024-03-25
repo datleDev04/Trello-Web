@@ -50,9 +50,9 @@ export default function Card({ card }) {
           opacity: card.FE_placholder_card ? '0' : '1',
           minWidth: card.FE_placholder_card ? '280px' : 'unset',
           pointerEvents: card.FE_placholder_card ? 'none' : 'unset',
-          position: card.FE_placholder_card ? 'fixed' : 'unset'
-
-
+          position: card.FE_placholder_card ? 'fixed' : 'unset',
+          border: '1px solid transparent',
+          '&:hover': { borderColor: (theme) => theme.palette.primary.main }
         }}
         ref={setNodeRef}
         style={dndKitCardStyle}
