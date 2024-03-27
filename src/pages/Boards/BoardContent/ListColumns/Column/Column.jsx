@@ -41,7 +41,7 @@ import { CSS } from '@dnd-kit/utilities'
 
 import { toast } from 'react-toastify'
 
-const Column = ({ column }) => {
+const Column = ({ column, createNewCard }) => {
   // dnd-kit drag drop
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
@@ -81,13 +81,20 @@ const Column = ({ column }) => {
     setOpenNewCardForm(!openNewCardForm)
   }
 
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle ) {
       toast.error('Please enter the card title', {
         position: 'bottom-right'
       })
       return
     }
+
+    const newCard = {
+      title: newCardTitle,
+      columnId: column._id
+    }
+
+    await createNewCard(newCard)
 
     // thêm xong thì đóng form thêm
     toggleOpenNewCardForm()

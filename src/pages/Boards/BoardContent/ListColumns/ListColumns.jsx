@@ -16,7 +16,7 @@ import { useState } from 'react'
 import { TextField } from '@mui/material'
 import { toast } from 'react-toastify'
 
-const ListColumns = ({ columns }) => {
+const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
 
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
 
@@ -26,11 +26,17 @@ const ListColumns = ({ columns }) => {
     setOpenNewColumnForm(!openNewColumnForm)
   }
 
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColTitle ) {
       toast.error('Please enter the column title')
       return
     }
+
+    const newColumnData = {
+      title: newColTitle
+    }
+
+    await createNewColumn(newColumnData)
 
     // thêm xong thì đóng form thêm
     toggleOpenNewColumnForm()
@@ -51,7 +57,7 @@ const ListColumns = ({ columns }) => {
         '&::-webkit-scrollbar-track': { m: 2 }
       }}>
         { columns.map((column) => {
-          return <Column key={column?._id} column={column} />
+          return <Column key={column?._id} column={ column } createNewCard={createNewCard} />
         }) }
 
         {/* <Column /> */}

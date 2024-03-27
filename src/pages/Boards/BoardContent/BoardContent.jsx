@@ -28,7 +28,7 @@ import { generatePlaceholderCard } from '~/utils/formator'
 // cloneDeep
 
 
-export default function BoardContent( { board } ) {
+export default function BoardContent( { board, createNewColumn, createNewCard } ) {
   const ACTIVE_ITEM_TYPE = {
     COLUMN : 'ACTIVE_ITEM_COLUMN',
     CARD : 'ACTIVE_ITEM_CARD'
@@ -312,7 +312,12 @@ export default function BoardContent( { board } ) {
         height : (theme) => theme.trello.boardContentHeight,
         bgcolor: (theme) => ( theme.palette.mode === 'dark' ? '#2c3e50' : '#1976d2' )
       }} >
-        <ListColumns columns ={orderredColumns} />
+
+        <ListColumns
+          columns ={orderredColumns}
+          createNewColumn={createNewColumn}
+          createNewCard={createNewCard}
+        />
         <DragOverlay dropAnimation={customDropAnimation} >
           {!activeDragItemId && null }
           {(activeDragItemType === ACTIVE_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData} />}
