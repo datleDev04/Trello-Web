@@ -33,7 +33,8 @@ export default function BoardContent({
   createNewColumn,
   createNewCard,
   moveColumns,
-  moveCardInSameColumn
+  moveCardInSameColumn,
+  moveCardToDiffColumn
 } ) {
   const ACTIVE_ITEM_TYPE = {
     COLUMN : 'ACTIVE_ITEM_COLUMN',
@@ -87,7 +88,8 @@ export default function BoardContent({
     over,
     activeColumn,
     activeDragingCardId,
-    activeDragingCardData
+    activeDragingCardData,
+    moveCardToDiffColumn
   ) => {
     setOrderredColumns(prevColumns => {
       // tìm vị trí (index) mà card sắp được thả
@@ -139,6 +141,13 @@ export default function BoardContent({
         // cập nhật lại cardOrderIds sau khi đã được kéo card vào cột mình
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
+
+      moveCardToDiffColumn(
+        activeDragingCardId,
+        oldColumnWhenDragCard._id,
+        nextOverColumn._id,
+        nextColumns
+      )
 
       return nextColumns
     })
@@ -243,7 +252,8 @@ export default function BoardContent({
           over,
           activeColumn,
           activeDragingCardId,
-          activeDragingCardData
+          activeDragingCardData,
+          moveCardToDiffColumn
         )
       } else {
         // Xử lí khi kéo card chung 1 Column
@@ -358,7 +368,7 @@ export default function BoardContent({
       onDragStart={handleDragStartColumn}
       // onDragOver ={handleDragOver}
       onDragEnd={handleDragEndColumn}
-      collisionDetection={closestCenter}
+      collisionDetection={closestCorners}
     >
       {/* FULL BOARD CONTENT */}
       <Box sx={{

@@ -11,7 +11,8 @@ import {
   createNewColumnApi,
   fetchBoarDetailAPI,
   updateBoarDetailAPI,
-  updateColumnDetailAPI
+  updateColumnDetailAPI,
+  moveCardToDiffAPI
 } from '~/apis'
 import { isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/utils/formator'
@@ -111,6 +112,28 @@ export default function Board() {
     updateColumnDetailAPI(columnId, { cardOrderIds: dndCardOrderIds })
   }
 
+  const moveCardToDiffColumn = async (currentCardId, preColumndId, nextColumnId, dndOrderredColumns) => {
+    const dndOrderredColumnsId = await dndOrderredColumns.map(column => column._id)
+    const newBoard = { ...board }
+
+    newBoard.columns = dndOrderredColumns
+    newBoard.columnOrderIds = dndOrderredColumnsId
+    setBoard(newBoard)
+
+    let preCardOrderIds = dndOrderredColumns.find(c => c._id === preColumndId)?.cardOrderIds
+    // console.log(preCardOrderIds, 'before')
+    if (preCardOrderIds[0].includes('placeholder-card')) preCardOrderIds = []
+    // console.log(preCardOrderIds, 'a')
+
+    moveCardToDiffAPI({
+      currentCardId,
+      preColumndId,
+      preCardOrderIds,
+      nextColumnId,
+      nextCardOrderIds : dndOrderredColumns.find(c => c._id === nextColumnId)?.cardOrderIds
+    })
+  }
+
   if (!board) {
     return (
       <Box sx= {{
@@ -137,6 +160,7 @@ export default function Board() {
         createNewCard={createNewCard}
         moveColumns = {moveColumns}
         moveCardInSameColumn = {moveCardInSameColumn}
+        moveCardToDiffColumn = {moveCardToDiffColumn}
       />
     </Container>
   )
