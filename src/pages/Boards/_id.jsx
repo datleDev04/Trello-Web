@@ -3,15 +3,15 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 
-import { mockData } from '~/apis/mock-data'
 import { useState, useEffect } from 'react'
-import { createNewCardApi, createNewColumnApi, fetchBoarDetailAPI } from '~/apis'
+import { createNewCardApi, createNewColumnApi, fetchBoarDetailAPI, updateBoarDetailAPI } from '~/apis'
 import { isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/utils/formator'
+import { mockData } from '~/apis/mock-data'
 export default function Board() {
   const [board, setBoard] = useState(null)
 
-  const boardId = '6600275907ae95b39ea5e15d'
+  const boardId = '660514db3da5848fa62b1266'
 
   useEffect(() => {
     fetchBoarDetailAPI(boardId)
@@ -19,6 +19,21 @@ export default function Board() {
         // xử lí khi tồn tại column rỗng => fix không thể kéo thả
         board.columns.forEach(column => {
           if ( isEmpty(column.cards) ) {
+            // console.log(column.title)
+            column.cards = [generatePlaceholderCard(column)]
+            column.cardOrderIds = [generatePlaceholderCard(column)._id]
+          }
+        })
+        setBoard(board)
+      })
+  }, [])
+  useEffect(() => {
+    fetchBoarDetailAPI(boardId)
+      .then(board => {
+        // xử lí khi tồn tại column rỗng => fix không thể kéo thả
+        board.columns.forEach(column => {
+          if ( isEmpty(column.cards) ) {
+            // console.log(column.title)
             column.cards = [generatePlaceholderCard(column)]
             column.cardOrderIds = [generatePlaceholderCard(column)._id]
           }
@@ -66,6 +81,20 @@ export default function Board() {
     setBoard(newBoard)
   }
 
+  // cập nhật lại vị trí column khi kéo thả
+  const moveColumns = async (dndOrderredColumns) => {
+    // cập nhật với state
+    const dndOrderredColumnsIds = dndOrderredColumns.map(c => c._id)
+
+    const newBoard = { ...board }
+    newBoard.columns = dndOrderredColumns
+    newBoard.columnOrderIds = dndOrderredColumnsIds
+    setBoard(newBoard)
+
+    // gọi state cập nhật columnOrderIds trong db
+    await updateBoarDetailAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
+  }
+
   return (
     <Container disableGutters maxWidth= { false } sx={{ height: '100vh' }} >
       <AppBar/>
@@ -77,6 +106,7 @@ export default function Board() {
             board={board}
             createNewColumn={createNewColumn}
             createNewCard={createNewCard}
+            moveColumns = {moveColumns}
           />
         </>
       }

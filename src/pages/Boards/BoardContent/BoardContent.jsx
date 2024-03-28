@@ -28,7 +28,12 @@ import { generatePlaceholderCard } from '~/utils/formator'
 // cloneDeep
 
 
-export default function BoardContent( { board, createNewColumn, createNewCard } ) {
+export default function BoardContent({
+  board,
+  createNewColumn,
+  createNewCard,
+  moveColumns
+} ) {
   const ACTIVE_ITEM_TYPE = {
     COLUMN : 'ACTIVE_ITEM_COLUMN',
     CARD : 'ACTIVE_ITEM_CARD'
@@ -275,8 +280,11 @@ export default function BoardContent( { board, createNewColumn, createNewCard } 
         // arrange agian orderredCollums after move collums
         // arrayMove(Items, old, new)
         const dndOrderredColumns = arrayMove(orderredColumns, oldIndex, newIndex )
+
+        // vẫn setState tránh delay do cập nhật vị trí column
         setOrderredColumns(dndOrderredColumns)
-        // console.log(orderredColumns)
+
+        moveColumns(dndOrderredColumns)
       }
     }
 
@@ -297,11 +305,20 @@ export default function BoardContent( { board, createNewColumn, createNewCard } 
     })
   }
 
+  //custom lại thuật toán của dnd-kit
+  // const collisionDetectionStrategy = useCallback( (args) => {
+  //   if (active) {
+
+  //   }
+  // }, [] )
+
   return (
     // Dnd Context wrapper to active event
     <DndContext
       sensors={sensors}
+      // closestCorners: bug nhấp nhả card
       collisionDetection={closestCorners}
+      // collisionDetection={collisionDetectionStrategy}
       onDragStart={handleDragStartColumn}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEndColumn}
