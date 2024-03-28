@@ -16,7 +16,7 @@ import { useState } from 'react'
 import { TextField } from '@mui/material'
 import { toast } from 'react-toastify'
 
-const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
+const ListColumns = ({ columns, createNewColumn, createNewCard, deleteColumnDetails }) => {
 
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
 
@@ -57,7 +57,12 @@ const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
         '&::-webkit-scrollbar-track': { m: 2 }
       }}>
         { columns.map((column) => {
-          return <Column key={column?._id} column={ column } createNewCard={createNewCard} />
+          return <Column
+            key={column?._id}
+            column={ column }
+            createNewCard={createNewCard}
+            deleteColumnDetails={deleteColumnDetails}
+          />
         }) }
 
         {/* <Column /> */}
