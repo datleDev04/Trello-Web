@@ -34,7 +34,8 @@ export default function BoardContent({
   createNewCard,
   moveColumns,
   moveCardInSameColumn,
-  moveCardToDiffColumn
+  moveCardToDiffColumn,
+  deleteColumnDetails
 } ) {
   const ACTIVE_ITEM_TYPE = {
     COLUMN : 'ACTIVE_ITEM_COLUMN',
@@ -381,6 +382,7 @@ export default function BoardContent({
           columns ={orderredColumns}
           createNewColumn={createNewColumn}
           createNewCard={createNewCard}
+          deleteColumnDetails={deleteColumnDetails}
         />
         <DragOverlay dropAnimation={customDropAnimation} >
           {!activeDragItemId && null }

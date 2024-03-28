@@ -5,14 +5,17 @@ import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/s
 import theme from '~/theme'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { ConfirmProvider } from 'material-ui-confirm'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <CssVarsProvider theme={theme} >
-    {/* Chuẩn hóa css tạo sự nhất quán ở nhiều các trình duyệt khác nhau */}
-    <CssBaseline />
-    <App />
-    <ToastContainer
-      position='bottom-left' theme='dark'
-    />
+    <ConfirmProvider >
+      {/* Chuẩn hóa css tạo sự nhất quán ở nhiều các trình duyệt khác nhau */}
+      <CssBaseline />
+      <App />
+      <ToastContainer
+        position='bottom-left' theme='dark'
+      />
+    </ConfirmProvider>
   </CssVarsProvider>
 )

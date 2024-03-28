@@ -25,7 +25,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ListCard from './ListCards/ListCard'
 import ClearIcon from '@mui/icons-material/Clear'
 import AddCardIcon from '@mui/icons-material/AddCard'
-
+import { useConfirm } from 'material-ui-confirm'
 
 // devclare variable
 const COLLUM_HEADER_HEIGHT = '52px'
@@ -38,7 +38,7 @@ import { CSS } from '@dnd-kit/utilities'
 
 import { toast } from 'react-toastify'
 
-const Column = ({ column, createNewCard }) => {
+const Column = ({ column, createNewCard, deleteColumnDetails }) => {
   // dnd-kit drag drop
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
@@ -99,6 +99,16 @@ const Column = ({ column, createNewCard }) => {
     setNewCardTitle('')
   }
 
+  const confirmDeleteColumn = useConfirm()
+
+  const handleDeleteColumn = () => {
+    confirmDeleteColumn({
+      'title': 'Delete Column ?',
+      'description': 'This action will permanently delete your column and its Card! Are you sure?'
+    }).then(() => {
+      deleteColumnDetails(column._id)
+    }).catch(() => {})
+  }
   return (
     <>
       <div ref={setNodeRef} style={dndKitColumnStyle} {...attributes} >
@@ -188,11 +198,13 @@ const Column = ({ column, createNewCard }) => {
                   </ListItemIcon>
                   <ListItemText>Archive this collum</ListItemText>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                  onClick ={handleDeleteColumn}
+                >
                   <ListItemIcon>
                     <DeleteForeverIcon fontSize="small" />
                   </ListItemIcon>
-                  <ListItemText>Remove this collum</ListItemText>
+                  <ListItemText>Delete this collum</ListItemText>
                 </MenuItem>
               </Menu>
             </Box>

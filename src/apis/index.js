@@ -28,6 +28,10 @@ export const updateColumnDetailAPI = async (columnID, updateData) => {
   const response = await axios.put(`${API_ROOT}/v1/column/${columnID}`, updateData)
   return response.data
 }
+export const deleteColumnDetailAPI = async (columnID) => {
+  const response = await axios.delete(`${API_ROOT}/v1/column/${columnID}`)
+  return response.data
+}
 
 
 //API CARD
