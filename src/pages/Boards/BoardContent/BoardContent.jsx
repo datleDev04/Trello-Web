@@ -4,9 +4,6 @@ import Box from '@mui/material/Box'
 // import file
 import ListColumns from './ListColumns/ListColumns'
 
-// import sort funtion
-import { mapOrder } from '~/utils/sorts'
-
 // dnd-kit
 import { arrayMove } from '@dnd-kit/sortable'
 import {
@@ -35,7 +32,8 @@ export default function BoardContent({
   board,
   createNewColumn,
   createNewCard,
-  moveColumns
+  moveColumns,
+  moveCardInSameColumn
 } ) {
   const ACTIVE_ITEM_TYPE = {
     COLUMN : 'ACTIVE_ITEM_COLUMN',
@@ -52,7 +50,7 @@ export default function BoardContent({
   const lastOverId = useRef(null)
 
   useEffect(() => {
-    setOrderredColumns(mapOrder(board.columns, board.columnOrderIds, '_id'))
+    setOrderredColumns(board.columns)
   }, [board])
 
   const findColumnByCardId = (cardID) => {
@@ -262,7 +260,7 @@ export default function BoardContent({
 
 
         const dndOrderredCard = arrayMove(oldColumnWhenDragCard?.cards, oldCardIndex, newCardIndex)
-
+        const dndCardOrderIds = dndOrderredCard.map(card => card._id)
         setOrderredColumns(prevColumns => {
           // clone lại mảng state orderredCollum ra 1 mảng mới rồi handle rồi return lại state mới
           const nextColumns = cloneDeep(prevColumns)
@@ -271,12 +269,14 @@ export default function BoardContent({
 
           // cập nhật lại giá trị cho targetColumn
           targetColumn.cards = dndOrderredCard
-          targetColumn.cardOrderIds = dndOrderredCard.map(card => card._id)
+          targetColumn.cardOrderIds = dndCardOrderIds
+          console.log(dndCardOrderIds)
 
           // trả về nextColums với dữ liệu đã được cập nhật
           return nextColumns
         })
 
+        moveCardInSameColumn(dndOrderredCard, dndCardOrderIds, oldColumnWhenDragCard._id)
       }
     }
 

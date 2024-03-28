@@ -21,7 +21,6 @@ import Typography from '@mui/material/Typography'
 // MUI icons import
 import AddIcon from '@mui/icons-material/Add'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import ListCard from './ListCards/ListCard'
 import ClearIcon from '@mui/icons-material/Clear'
@@ -32,8 +31,6 @@ import AddCardIcon from '@mui/icons-material/AddCard'
 const COLLUM_HEADER_HEIGHT = '52px'
 const COLLUM_FOOTER_HEIGHT = '56px'
 
-// import sort funtion
-import { mapOrder } from '~/utils/sorts'
 
 //dnd-kit
 import { useSortable } from '@dnd-kit/sortable'
@@ -71,7 +68,7 @@ const Column = ({ column, createNewCard }) => {
   }
 
   // handle sort card
-  const orderredCards = mapOrder(column.cards, column.cardOrderIds, '_id')
+  const orderredCards = column.cards
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
 
