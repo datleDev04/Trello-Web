@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from '~/App.jsx'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -8,14 +7,12 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <CssVarsProvider theme={theme} >
-      {/* Chuẩn hóa css tạo sự nhất quán ở nhiều các trình duyệt khác nhau */}
-      <CssBaseline />
-      <App />
-      <ToastContainer
-        position='bottom-left' theme='dark'
-      />
-    </CssVarsProvider>
-  </React.StrictMode>
+  <CssVarsProvider theme={theme} >
+    {/* Chuẩn hóa css tạo sự nhất quán ở nhiều các trình duyệt khác nhau */}
+    <CssBaseline />
+    <App />
+    <ToastContainer
+      position='bottom-left' theme='dark'
+    />
+  </CssVarsProvider>
 )
