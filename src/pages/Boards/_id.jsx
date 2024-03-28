@@ -2,12 +2,25 @@ import Container from '@mui/material/Container'
 import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
-
+// MUI import
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
 import { useState, useEffect } from 'react'
-import { createNewCardApi, createNewColumnApi, fetchBoarDetailAPI, updateBoarDetailAPI } from '~/apis'
+import {
+  createNewCardApi,
+  createNewColumnApi,
+  fetchBoarDetailAPI,
+  updateBoarDetailAPI,
+  updateColumnDetailAPI,
+  moveCardToDiffAPI
+} from '~/apis'
 import { isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/utils/formator'
 import { mockData } from '~/apis/mock-data'
+
+// import sort funtion
+import { mapOrder } from '~/utils/sorts'
+import { Typography } from '@mui/material'
 export default function Board() {
   const [board, setBoard] = useState(null)
 
@@ -16,26 +29,16 @@ export default function Board() {
   useEffect(() => {
     fetchBoarDetailAPI(boardId)
       .then(board => {
+        board.columns = mapOrder(board.columns, board.columnOrderIds, '_id')
         // xử lí khi tồn tại column rỗng => fix không thể kéo thả
+        // console.log(board.columns)
         board.columns.forEach(column => {
+
           if ( isEmpty(column.cards) ) {
-            // console.log(column.title)
             column.cards = [generatePlaceholderCard(column)]
             column.cardOrderIds = [generatePlaceholderCard(column)._id]
-          }
-        })
-        setBoard(board)
-      })
-  }, [])
-  useEffect(() => {
-    fetchBoarDetailAPI(boardId)
-      .then(board => {
-        // xử lí khi tồn tại column rỗng => fix không thể kéo thả
-        board.columns.forEach(column => {
-          if ( isEmpty(column.cards) ) {
-            // console.log(column.title)
-            column.cards = [generatePlaceholderCard(column)]
-            column.cardOrderIds = [generatePlaceholderCard(column)._id]
+          } else {
+            column.cards = mapOrder(column.cards, column.cardOrderIds, '_id')
           }
         })
         setBoard(board)
@@ -95,22 +98,70 @@ export default function Board() {
     updateBoarDetailAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
   }
 
+  const moveCardInSameColumn = async (dndOrderredCard, dndCardOrderIds, columnId) => {
+    const newBoard = { ...board }
+    const columnToUpdate = await newBoard.columns.find(column => column._id === columnId)
+
+    if (columnToUpdate) {
+      columnToUpdate.cards = dndOrderredCard
+      columnToUpdate.cardOrderIds = dndCardOrderIds
+    }
+
+    setBoard(newBoard)
+
+    updateColumnDetailAPI(columnId, { cardOrderIds: dndCardOrderIds })
+  }
+
+  const moveCardToDiffColumn = async (currentCardId, preColumndId, nextColumnId, dndOrderredColumns) => {
+    const dndOrderredColumnsId = await dndOrderredColumns.map(column => column._id)
+    const newBoard = { ...board }
+
+    newBoard.columns = dndOrderredColumns
+    newBoard.columnOrderIds = dndOrderredColumnsId
+    setBoard(newBoard)
+
+    let preCardOrderIds = dndOrderredColumns.find(c => c._id === preColumndId)?.cardOrderIds
+    // console.log(preCardOrderIds, 'before')
+    if (preCardOrderIds[0].includes('placeholder-card')) preCardOrderIds = []
+    // console.log(preCardOrderIds, 'a')
+
+    moveCardToDiffAPI({
+      currentCardId,
+      preColumndId,
+      preCardOrderIds,
+      nextColumnId,
+      nextCardOrderIds : dndOrderredColumns.find(c => c._id === nextColumnId)?.cardOrderIds
+    })
+  }
+
+  if (!board) {
+    return (
+      <Box sx= {{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent :'center',
+        gap: 2,
+        width: '100wh',
+        height: '100vh'
+      }}>
+        <CircularProgress />
+        <Typography> Loading... </Typography>
+      </Box>
+    )
+  }
 
   return (
     <Container disableGutters maxWidth= { false } sx={{ height: '100vh' }} >
       <AppBar/>
-      {
-        board &&
-        <>
-          <BoardBar board={board} />
-          <BoardContent
-            board={board}
-            createNewColumn={createNewColumn}
-            createNewCard={createNewCard}
-            moveColumns = {moveColumns}
-          />
-        </>
-      }
+      <BoardBar board={board} />
+      <BoardContent
+        board={board}
+        createNewColumn={createNewColumn}
+        createNewCard={createNewCard}
+        moveColumns = {moveColumns}
+        moveCardInSameColumn = {moveCardInSameColumn}
+        moveCardToDiffColumn = {moveCardToDiffColumn}
+      />
     </Container>
   )
 }

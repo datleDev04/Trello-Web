@@ -5,20 +5,27 @@ import { API_ROOT } from '~/utils/constants'
 
 export const fetchBoarDetailAPI = async (boardID) => {
   const response = await axios.get(`${API_ROOT}/v1/board/${boardID}`)
-  // console.log(response.data)
   return response.data
 }
 
 export const updateBoarDetailAPI = async (boardID, updateData) => {
   const response = await axios.put(`${API_ROOT}/v1/board/${boardID}`, updateData)
-  // console.log(response.data)
+  return response.data
+}
+
+export const moveCardToDiffAPI = async (updateData) => {
+  const response = await axios.put(`${API_ROOT}/v1/board/supports/moving_card`, updateData)
   return response.data
 }
 
 //API COLUMN
 export const createNewColumnApi = async (newColumnData) => {
   const response = await axios.post(`${API_ROOT}/v1/column`, newColumnData)
-  // console.log(response.data)
+  return response.data
+}
+
+export const updateColumnDetailAPI = async (columnID, updateData) => {
+  const response = await axios.put(`${API_ROOT}/v1/column/${columnID}`, updateData)
   return response.data
 }
 
@@ -26,6 +33,5 @@ export const createNewColumnApi = async (newColumnData) => {
 //API CARD
 export const createNewCardApi = async (newCardData) => {
   const response = await axios.post(`${API_ROOT}/v1/card`, newCardData)
-  // console.log(response.data)
   return response.data
 }
