@@ -92,8 +92,9 @@ export default function Board() {
     setBoard(newBoard)
 
     // gọi state cập nhật columnOrderIds trong db
-    await updateBoarDetailAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
+    updateBoarDetailAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
   }
+
 
   return (
     <Container disableGutters maxWidth= { false } sx={{ height: '100vh' }} >

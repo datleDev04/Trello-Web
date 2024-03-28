@@ -17,9 +17,12 @@ import {
   useSensors,
   DragOverlay,
   defaultDropAnimationSideEffects,
-  closestCorners
+  closestCorners,
+  closestCenter,
+  pointerWithin,
+  getFirstCollision
 } from '@dnd-kit/core'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
 import { cloneDeep, isEmpty } from 'lodash'
@@ -45,6 +48,8 @@ export default function BoardContent({
   const [activeDragItemType, setActiveDragItemType] = useState(null)
   const [activeDragItemData, setActiveDragItemData] = useState(null)
   const [oldColumnWhenDragCard, setOldColumnWhenDragCard] = useState(null)
+
+  const lastOverId = useRef(null)
 
   useEffect(() => {
     setOrderredColumns(mapOrder(board.columns, board.columnOrderIds, '_id'))
@@ -76,7 +81,7 @@ export default function BoardContent({
     touchSensor
   )
 
-  // cap nhat state khi keo tha sang cac col khac nhau
+  // cap nhat state khi keo tha card sang cac col khac nhau
   const moveCardBetweenDiffCol = (
     overColumn,
     overCardId,
@@ -143,10 +148,11 @@ export default function BoardContent({
 
   // handle dragstart
   const handleDragStartColumn = (event) => {
-    // console.log(event)
+    console.log('handleDragStartColumn: ', event)
     setActiveDragItemId(event?.active?.id)
     setActiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_ITEM_TYPE.CARD : ACTIVE_ITEM_TYPE.COLUMN )
     setActiveDragItemData(event?.active?.data?.current)
+
 
     if (event?.active?.data?.current?.columnId) {
       setOldColumnWhenDragCard(findColumnByCardId(event?.active?.id))
@@ -154,56 +160,61 @@ export default function BoardContent({
   }
 
   //handlde dragover
-  const handleDragOver = (event) => {
-    // console.log(event);
-
-    // nếu là kéo thả cột thì return vì kéo thả cột đã ổn
-    // dragover để xử lí kéo card từ cột này sang cột khác
-    if (activeDragItemType === ACTIVE_ITEM_TYPE.COLUMN) return
-
-    // nếu là kéo thả card thì mới xử lí
-    if (activeDragItemType === ACTIVE_ITEM_TYPE.CARD) {
-      // lấy active và over từ event
-      const { active, over } = event
-
-      // nếu không có over hoặc active thì return
-      if (!over || !active) return
-
-      // lấy id và data của item khi active
-      const { id: activeDragingCardId, data: { current: activeDragingCardData } } = active
-      // lấy id của item khi over
-      const { id: overCardId } = over
+  // const handleDragOver = (event) => {
+  //   console.log('ádddddddddddddđ');
 
 
-      // lấy ra cột ban đầu được active
-      const activeColumn = findColumnByCardId(activeDragingCardId)
+  //   // nếu là kéo thả cột thì return vì kéo thả cột đã ổn
+  //   // dragover để xử lí kéo card từ cột này sang cột khác
+  //   if (activeDragItemType === ACTIVE_ITEM_TYPE.COLUMN) return
+  //   console.log(activeDragItemType);
+  //   console.log('qqqqqqqqqqqqqq');
 
-      // lấy ra cột over
-      const overColumn = findColumnByCardId(overCardId)
-      // console.log("active ",activeColumn)
-      // console.log("overColumn", overColumn)
+  //   // nếu là kéo thả card thì mới xử lí
+  //   if (activeDragItemType === ACTIVE_ITEM_TYPE.CARD) {
+  //     // lấy active và over từ event
+  //     const { active, over } = event
 
-      if (!activeColumn || !overColumn) return
+  //     // nếu không có over hoặc active thì return
+  //     if (!over || !active) return
 
-      // chỉ xử lí nếu kéo card sang 1 cột #
-      // dragEnd đã xử lí nếu kéo card tỏng 1 column
-      if (activeColumn !== overColumn) {
-        moveCardBetweenDiffCol(
-          overColumn,
-          overCardId,
-          active,
-          over,
-          activeColumn,
-          activeDragingCardId,
-          activeDragingCardData
-        )
-      }
+  //     // lấy id và data của item khi active
+  //     const { id: activeDragingCardId, data: { current: activeDragingCardData } } = active
+  //     // lấy id của item khi over
+  //     const { id: overCardId } = over
 
-    }
-  }
+
+  //     // lấy ra cột ban đầu được active
+  //     const activeColumn = findColumnByCardId(activeDragingCardId)
+
+  //     // lấy ra cột over
+  //     const overColumn = findColumnByCardId(overCardId)
+  //     // console.log("active ",activeColumn)
+  //     // console.log("overColumn", overColumn)
+
+  //     if (!activeColumn || !overColumn) return
+
+  //     // chỉ xử lí nếu kéo card sang 1 cột #
+  //     // dragEnd đã xử lí nếu kéo card tỏng 1 column
+  //     if (activeColumn !== overColumn) {
+  //       moveCardBetweenDiffCol(
+  //         overColumn,
+  //         overCardId,
+  //         active,
+  //         over,
+  //         activeColumn,
+  //         activeDragingCardId,
+  //         activeDragingCardData
+  //       )
+  //     }
+
+  //   }
+  // }
 
   // handle dragend with dnd-kit
   const handleDragEndColumn = (event) => {
+    console.log('handleDragEndColumn');
+
     const { active, over } = event
 
     // nếu kéo xong vẫn ở vị trí cũ
@@ -211,6 +222,7 @@ export default function BoardContent({
     if (!over) return
 
     // console.log(event)
+    // xử lí kéo thả card
     if (activeDragItemType === ACTIVE_ITEM_TYPE.CARD) {
       // console.log('Handle Drag end: Hnahf động kéo card đang không làm gì cả : ')
       // lấy id và data của item khi active
@@ -306,22 +318,47 @@ export default function BoardContent({
   }
 
   //custom lại thuật toán của dnd-kit
-  // const collisionDetectionStrategy = useCallback( (args) => {
-  //   if (active) {
+  const collisionDetectionStrategy = useCallback((args) => {
+    console.log('collisionDetectionStrategy')
+    if (activeDragItemType === ACTIVE_ITEM_TYPE.COLUMN) {
+      return closestCorners({ ...args })
+    }
 
-  //   }
-  // }, [] )
+    const pointerIntersections = pointerWithin(args)
+
+    if (pointerIntersections?.length) return
+
+
+    let overId = getFirstCollision(pointerIntersections)
+
+    if (overId) {
+
+      const checkColumn = orderredColumns.find(column => column._id === overId)
+      if (checkColumn) {
+        overId = closestCorners({
+          ...args,
+          droppableContainers: args.droppableContainers.filter(container => {
+            return ( container.id !== overId ) && (checkColumn?.cardOrderIds?.includes(container.id))
+          })
+        })[0]?.id
+      }
+
+      lastOverId.current = overId
+      return [{ id: overId }]
+    }
+
+    return lastOverId.current ? [{ id: lastOverId.current }] : []
+
+  }, [activeDragItemType, orderredColumns] )
 
   return (
     // Dnd Context wrapper to active event
     <DndContext
       sensors={sensors}
-      // closestCorners: bug nhấp nhả card
-      collisionDetection={closestCorners}
-      // collisionDetection={collisionDetectionStrategy}
       onDragStart={handleDragStartColumn}
-      onDragOver={handleDragOver}
+      // onDragOver ={handleDragOver}
       onDragEnd={handleDragEndColumn}
+      collisionDetection={closestCenter}
     >
       {/* FULL BOARD CONTENT */}
       <Box sx={{
